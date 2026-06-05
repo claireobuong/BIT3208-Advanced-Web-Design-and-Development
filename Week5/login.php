@@ -25,6 +25,8 @@ body{
     min-height:100vh;
 }
 
+/* MAIN CONTAINER */
+
 .container{
     width:460px;
 
@@ -41,6 +43,8 @@ body{
     box-shadow:
     0 10px 30px rgba(0,0,0,0.08);
 }
+
+/* BACKGROUND CIRCLES */
 
 .circle1{
     position:absolute;
@@ -70,10 +74,38 @@ body{
     left:-40px;
 }
 
+/* CONTENT */
+
 .content{
     position:relative;
     z-index:2;
 }
+
+h1{
+    text-align:center;
+
+    color:#245000;
+
+    font-size:30px;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+}
+
+.subtitle{
+    text-align:center;
+
+    color:#4b5d36;
+
+    font-size:13px;
+
+    margin-bottom:35px;
+
+    line-height:1.6;
+}
+
+/* ICON */
 
 .icon-circle{
     width:85px;
@@ -93,27 +125,7 @@ body{
     font-size:34px;
 }
 
-h1{
-    text-align:center;
-
-    color:#245000;
-
-    font-size:30px;
-
-    margin-bottom:8px;
-}
-
-.subtitle{
-    text-align:center;
-
-    color:#4b5d36;
-
-    font-size:13px;
-
-    margin-bottom:35px;
-
-    line-height:1.6;
-}
+/* LABELS */
 
 label{
     display:block;
@@ -127,6 +139,8 @@ label{
 
     font-weight:500;
 }
+
+/* INPUTS */
 
 input{
     width:100%;
@@ -146,7 +160,12 @@ input{
     outline:none;
 
     box-sizing:border-box;
+
+    box-shadow:
+    0 4px 10px rgba(0,0,0,0.04);
 }
+
+/* BUTTON */
 
 button{
     width:100%;
@@ -176,17 +195,7 @@ button:hover{
     background:#336600;
 }
 
-#message{
-    margin-top:18px;
-
-    text-align:center;
-
-    font-size:12px;
-
-    font-weight:500;
-
-    color:red;
-}
+/* SMALL CARD */
 
 .info-card{
     margin-top:25px;
@@ -246,31 +255,25 @@ button:hover{
 
         </div>
 
-        <form
-            action="dashboard.php"
-            method="POST"
-            onsubmit="return validateForm()"
-        >
+        <form action="dashboard.php" method="POST">
 
             <label>Username</label>
 
             <input
                 type="text"
-                id="username"
                 name="username"
                 placeholder="Enter Username"
+                required
             >
 
             <label>Password</label>
 
             <input
                 type="password"
-                id="password"
                 name="password"
                 placeholder="Enter Password"
+                required
             >
-
-            <div id="message"></div>
 
             <button type="submit">
                 Login
@@ -296,48 +299,6 @@ button:hover{
     </div>
 
 </div>
-
-<script>
-
-function validateForm(){
-
-    let username =
-        document.getElementById("username").value;
-
-    let password =
-        document.getElementById("password").value;
-
-    let message =
-        document.getElementById("message");
-
-    if(username === ""){
-
-        message.innerHTML =
-        "Username is required";
-
-        return false;
-    }
-
-    if(password === ""){
-
-        message.innerHTML =
-        "Password is required";
-
-        return false;
-    }
-
-    if(password.length < 6){
-
-        message.innerHTML =
-        "Password must be at least 6 characters";
-
-        return false;
-    }
-
-    return true;
-}
-
-</script>
 
 </body>
 

@@ -1,12 +1,48 @@
+<?php
+
+$conn = mysqli_connect(
+    "localhost",
+    "root",
+    "",
+    "week5db"
+);
+
+$message = "";
+
+if(isset($_POST['submit'])){
+
+    $username = $_POST['username'];
+
+    $password = $_POST['password'];
+
+    $insert = mysqli_query(
+
+        $conn,
+
+        "INSERT INTO users(username, password)
+
+        VALUES('$username', '$password')"
+    );
+
+    if($insert){
+
+        $message = "User Added Successfully";
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Admin Login</title>
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Add User</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
@@ -15,7 +51,9 @@
 body{
     margin:0;
     padding:0;
+
     font-family:'Poppins', sans-serif;
+
     background:#eef1e8;
 
     display:flex;
@@ -176,7 +214,7 @@ button:hover{
     background:#336600;
 }
 
-#message{
+.message{
     margin-top:18px;
 
     text-align:center;
@@ -185,37 +223,7 @@ button:hover{
 
     font-weight:500;
 
-    color:red;
-}
-
-.info-card{
-    margin-top:25px;
-
-    background:rgba(255,255,255,0.18);
-
-    padding:18px;
-
-    border-radius:25px;
-
-    text-align:center;
-}
-
-.info-title{
     color:#245000;
-
-    font-size:14px;
-
-    font-weight:600;
-
-    margin-bottom:6px;
-}
-
-.info-text{
-    color:#35551f;
-
-    font-size:11px;
-
-    line-height:1.7;
 }
 
 </style>
@@ -232,112 +240,53 @@ button:hover{
     <div class="content">
 
         <div class="icon-circle">
-            🔐
+            👤
         </div>
 
         <h1>
-            Admin Login
+            Add User
         </h1>
 
         <div class="subtitle">
 
-            Secure login portal for the
-            voter registration system.
+            Create and save new users
+            into the system database.
 
         </div>
 
-        <form
-            action="dashboard.php"
-            method="POST"
-            onsubmit="return validateForm()"
-        >
+        <form method="POST">
 
             <label>Username</label>
 
             <input
                 type="text"
-                id="username"
                 name="username"
                 placeholder="Enter Username"
+                required
             >
 
             <label>Password</label>
 
             <input
                 type="password"
-                id="password"
                 name="password"
                 placeholder="Enter Password"
+                required
             >
 
-            <div id="message"></div>
-
-            <button type="submit">
-                Login
+            <button type="submit" name="submit">
+                Save User
             </button>
 
         </form>
 
-        <div class="info-card">
-
-            <div class="info-title">
-                Voter Registration System
-            </div>
-
-            <div class="info-text">
-
-                Secure login portal for
-                administrator access.
-
-            </div>
-
+        <div class="message">
+            <?php echo $message; ?>
         </div>
 
     </div>
 
 </div>
-
-<script>
-
-function validateForm(){
-
-    let username =
-        document.getElementById("username").value;
-
-    let password =
-        document.getElementById("password").value;
-
-    let message =
-        document.getElementById("message");
-
-    if(username === ""){
-
-        message.innerHTML =
-        "Username is required";
-
-        return false;
-    }
-
-    if(password === ""){
-
-        message.innerHTML =
-        "Password is required";
-
-        return false;
-    }
-
-    if(password.length < 6){
-
-        message.innerHTML =
-        "Password must be at least 6 characters";
-
-        return false;
-    }
-
-    return true;
-}
-
-</script>
 
 </body>
 
