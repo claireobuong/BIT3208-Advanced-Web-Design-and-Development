@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dynamic User Input Handling</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+    margin:0;
+    padding:0;
+    font-family:'Poppins', sans-serif;
+    background:#eef1e8;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+/* MAIN CONTAINER */
+
+.container{
+    width:950px;
+    background:#b8d98a;
+    border-radius:40px;
+    padding:40px;
+
+    box-sizing:border-box;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,0.08);
+
+    display:flex;
+    gap:30px;
+
+    position:relative;
+    overflow:hidden;
+}
+
+/* BACKGROUND EFFECTS */
+
+.circle1{
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    background:rgba(255,255,255,0.14);
+
+    border-radius:50%;
+
+    top:-50px;
+    right:-50px;
+}
+
+.circle2{
+    position:absolute;
+
+    width:120px;
+    height:120px;
+
+    background:rgba(255,255,255,0.12);
+
+    border-radius:50%;
+
+    bottom:-30px;
+    left:-30px;
+}
+
+/* LEFT SIDE */
+
+.form-section{
+    flex:1;
+    position:relative;
+    z-index:2;
+}
+
+h1{
+    color:#245000;
+    font-size:30px;
+    font-weight:600;
+    margin-bottom:6px;
+    letter-spacing:-0.5px;
+}
+
+.subtitle{
+    color:#4b5d36;
+    font-size:13px;
+    margin-bottom:28px;
+}
+
+/* INPUTS */
+
+label{
+    display:block;
+    color:#466128;
+    font-size:12px;
+    font-weight:500;
+    margin-bottom:8px;
+    margin-top:18px;
+}
+
+input{
+    width:100%;
+    padding:15px;
+
+    border:none;
+    border-radius:40px;
+
+    background:white;
+
+    font-size:13px;
+    font-family:'Poppins', sans-serif;
+
+    outline:none;
+
+    box-sizing:border-box;
+
+    box-shadow:
+    0 4px 12px rgba(0,0,0,0.04);
+}
+
+/* RIGHT SIDE */
+
+.preview-section{
+    width:320px;
+
+    background:white;
+
+    border-radius:35px;
+
+    padding:30px;
+
+    box-sizing:border-box;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,0.05);
+
+    position:relative;
+    z-index:2;
+}
+
+/* CARD HEADER */
+
+.preview-title{
+    color:#336600;
+    font-size:18px;
+    font-weight:600;
+    margin-bottom:25px;
+}
+
+/* PROFILE CIRCLE */
+
+.profile{
+    width:90px;
+    height:90px;
+
+    border-radius:50%;
+
+    background:#b8d98a;
+
+    margin:auto;
+    margin-bottom:25px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:#245000;
+    font-size:28px;
+    font-weight:600;
+}
+
+/* INFO BOX */
+
+.info{
+    background:#f4f7ef;
+
+    border-radius:22px;
+
+    padding:18px;
+
+    margin-bottom:15px;
+}
+
+.info-title{
+    color:#466128;
+    font-size:11px;
+    margin-bottom:6px;
+}
+
+.info-value{
+    color:#222;
+    font-size:14px;
+    font-weight:500;
+}
+
+/* FOOTER */
+
+.footer{
+    margin-top:25px;
+    text-align:center;
+
+    color:#35551f;
+    font-size:10px;
+
+    opacity:0.8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="circle1"></div>
+    <div class="circle2"></div>
+
+    <!-- LEFT SIDE -->
+
+    <div class="form-section">
+
+        <h1>Dynamic User Input</h1>
+
+        <div class="subtitle">
+            Live Voter Information Preview System
+        </div>
+
+        <label>Full Name</label>
+
+        <input
+            type="text"
+            id="nameInput"
+            placeholder="Enter Full Name"
+            onkeyup="updatePreview()"
+        >
+
+        <label>ID Number</label>
+
+        <input
+            type="text"
+            id="idInput"
+            placeholder="Enter ID Number"
+            onkeyup="updatePreview()"
+        >
+
+        <label>County</label>
+
+        <input
+            type="text"
+            id="countyInput"
+            placeholder="Enter County"
+            onkeyup="updatePreview()"
+        >
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+
+    <div class="preview-section">
+
+        <div class="preview-title">
+            Live Preview
+        </div>
+
+        <div class="profile" id="profileLetter">
+            V
+        </div>
+
+        <!-- NAME -->
+
+        <div class="info">
+
+            <div class="info-title">
+                Voter Name
+            </div>
+
+            <div class="info-value" id="previewName">
+                No Name Entered
+            </div>
+
+        </div>
+
+        <!-- ID -->
+
+        <div class="info">
+
+            <div class="info-title">
+                ID Number
+            </div>
+
+            <div class="info-value" id="previewID">
+                No ID Number
+            </div>
+
+        </div>
+
+        <!-- COUNTY -->
+
+        <div class="info">
+
+            <div class="info-title">
+                County
+            </div>
+
+            <div class="info-value" id="previewCounty">
+                No County Selected
+            </div>
+
+        </div>
+
+        <div class="footer">
+
+            Dynamic DOM Manipulation Successfully Implemented
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function updatePreview(){
+
+    let name =
+        document.getElementById("nameInput").value;
+
+    let id =
+        document.getElementById("idInput").value;
+
+    let county =
+        document.getElementById("countyInput").value;
+
+    /* UPDATE TEXT */
+
+    document.getElementById("previewName").innerHTML =
+        name || "No Name Entered";
+
+    document.getElementById("previewID").innerHTML =
+        id || "No ID Number";
+
+    document.getElementById("previewCounty").innerHTML =
+        county || "No County Selected";
+
+    /* PROFILE LETTER */
+
+    if(name.length > 0){
+
+        document.getElementById("profileLetter").innerHTML =
+            name.charAt(0).toUpperCase();
+
+    } else {
+
+        document.getElementById("profileLetter").innerHTML =
+            "V";
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>
