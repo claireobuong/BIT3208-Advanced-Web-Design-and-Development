@@ -1,230 +1,141 @@
+<?php
+session_start();
+
+$message = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $username = trim($_POST["username"]);
+    $password = trim($_POST["password"]);
+
+    if (empty($username) || empty($password)) {
+
+        $message = "Please enter both username and password.";
+
+    } elseif ($username == "admin" && $password == "admin123") {
+
+        $_SESSION["username"] = $username;
+
+        header("Location: dashboard.php");
+        exit();
+
+    } else {
+
+        $message = "Invalid username or password.";
+
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Admin Login</title>
+<title>CiviVote Kenya | Login</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="css/style.css">
+
 <style>
 
-body{
-    margin:0;
-    padding:0;
-    font-family:'Poppins', sans-serif;
-    background:#eef1e8;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    min-height:100vh;
-}
-
-/* MAIN CONTAINER */
+/* Login Page Only */
 
 .container{
-    width:460px;
 
-    background:#b8d98a;
+    max-width:460px;
 
-    padding:45px;
+    padding:28px;
 
-    border-radius:40px;
-
-    position:relative;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
 }
 
-/* BACKGROUND CIRCLES */
+.icon-circle{
 
-.circle1{
-    position:absolute;
+    width:70px;
 
-    width:170px;
-    height:170px;
+    height:70px;
 
-    background:rgba(255,255,255,0.12);
+    margin:0 auto 18px;
 
     border-radius:50%;
 
-    top:-60px;
-    right:-60px;
-}
+    background:#ffffff;
 
-.circle2{
-    position:absolute;
+    display:flex;
 
-    width:120px;
-    height:120px;
+    justify-content:center;
 
-    background:rgba(255,255,255,0.10);
-
-    border-radius:50%;
-
-    bottom:-40px;
-    left:-40px;
-}
-
-/* CONTENT */
-
-.content{
-    position:relative;
-    z-index:2;
-}
-
-h1{
-    text-align:center;
-
-    color:#245000;
+    align-items:center;
 
     font-size:30px;
 
-    margin-bottom:8px;
+}
 
-    font-weight:600;
+.content{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.content h1{
+
+    text-align:center;
+
+    font-size:28px;
+
 }
 
 .subtitle{
+
     text-align:center;
 
-    color:#4b5d36;
+    margin-bottom:20px;
 
-    font-size:13px;
-
-    margin-bottom:35px;
-
-    line-height:1.6;
 }
-
-/* ICON */
-
-.icon-circle{
-    width:85px;
-    height:85px;
-
-    background:white;
-
-    border-radius:50%;
-
-    margin:auto;
-    margin-bottom:30px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:34px;
-}
-
-/* LABELS */
 
 label{
-    display:block;
 
-    color:#466128;
+    margin-top:12px;
 
-    font-size:12px;
-
-    margin-bottom:8px;
-    margin-top:18px;
-
-    font-weight:500;
 }
 
-/* INPUTS */
-
 input{
-    width:100%;
-
-    padding:15px;
-
-    border:none;
 
     border-radius:40px;
 
-    background:white;
+}
+
+button{
+
+    border-radius:40px;
+
+    margin-top:18px;
+
+}
+
+.error-message{
+
+    background:#ffffff;
+
+    color:#c62828;
+
+    padding:10px;
+
+    border-radius:10px;
+
+    margin-top:15px;
+
+    text-align:center;
 
     font-size:13px;
 
-    font-family:'Poppins', sans-serif;
-
-    outline:none;
-
-    box-sizing:border-box;
-
-    box-shadow:
-    0 4px 10px rgba(0,0,0,0.04);
-}
-
-/* BUTTON */
-
-button{
-    width:100%;
-
-    padding:15px;
-
-    margin-top:30px;
-
-    border:none;
-
-    border-radius:40px;
-
-    background:#245000;
-
-    color:white;
-
-    font-size:14px;
-
-    font-weight:500;
-
-    cursor:pointer;
-
-    transition:0.3s;
-}
-
-button:hover{
-    background:#336600;
-}
-
-/* SMALL CARD */
-
-.info-card{
-    margin-top:25px;
-
-    background:rgba(255,255,255,0.18);
-
-    padding:18px;
-
-    border-radius:25px;
-
-    text-align:center;
-}
-
-.info-title{
-    color:#245000;
-
-    font-size:14px;
-
-    font-weight:600;
-
-    margin-bottom:6px;
-}
-
-.info-text{
-    color:#35551f;
-
-    font-size:11px;
-
-    line-height:1.7;
 }
 
 </style>
@@ -236,65 +147,73 @@ button:hover{
 <div class="container">
 
     <div class="circle1"></div>
+
     <div class="circle2"></div>
 
     <div class="content">
 
         <div class="icon-circle">
+
             🔐
+
         </div>
 
         <h1>
-            Admin Login
+
+            CiviVote Kenya
+
         </h1>
 
         <div class="subtitle">
 
-            Secure login portal for the
-            voter registration system.
+            Administrator Login
 
         </div>
 
-        <form action="dashboard.php" method="POST">
+        <form method="POST" action="">
 
-            <label>Username</label>
+            <label>
+
+                Username
+
+            </label>
 
             <input
                 type="text"
                 name="username"
                 placeholder="Enter Username"
-                required
+                value="<?php if(isset($username)) echo htmlspecialchars($username); ?>"
             >
 
-            <label>Password</label>
+            <label>
+
+                Password
+
+            </label>
 
             <input
                 type="password"
                 name="password"
                 placeholder="Enter Password"
-                required
             >
 
+            <?php if($message != ""){ ?>
+
+                <div class="error-message">
+
+                    <?php echo $message; ?>
+
+                </div>
+
+            <?php } ?>
+
             <button type="submit">
+
                 Login
+
             </button>
 
         </form>
-
-        <div class="info-card">
-
-            <div class="info-title">
-                Voter Registration System
-            </div>
-
-            <div class="info-text">
-
-                Secure login portal for
-                administrator access.
-
-            </div>
-
-        </div>
 
     </div>
 
