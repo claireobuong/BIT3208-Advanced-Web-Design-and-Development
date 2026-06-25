@@ -3,251 +3,131 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>PHP Syntax Practice</title>
+    <title>CiviVote Kenya</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Font -->
 
-<style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-body{
-    margin:0;
-    padding:0;
-    font-family:'Poppins', sans-serif;
-    background:#eef1e8;
+    <!-- Shared Styles -->
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-}
-
-/* MAIN CARD */
-
-.container{
-    width:720px;
-    background:#b8d98a;
-    border-radius:35px;
-    padding:35px;
-    box-sizing:border-box;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
-
-    position:relative;
-    overflow:hidden;
-}
-
-/* BACKGROUND CIRCLES */
-
-.circle1{
-    position:absolute;
-    width:180px;
-    height:180px;
-    background:rgba(255,255,255,0.18);
-    border-radius:50%;
-    top:-60px;
-    right:-60px;
-}
-
-.circle2{
-    position:absolute;
-    width:120px;
-    height:120px;
-    background:rgba(255,255,255,0.15);
-    border-radius:50%;
-    bottom:-40px;
-    left:-40px;
-}
-
-/* HEADER */
-
-.header{
-    position:relative;
-    z-index:2;
-}
-
-.header h1{
-    color:#245000;
-    font-size:30px;
-    margin-bottom:6px;
-    font-weight:600;
-    letter-spacing:-0.5px;
-}
-
-.header p{
-    color:#466128;
-    font-size:13px;
-    margin-bottom:30px;
-    font-weight:400;
-}
-
-/* INFO GRID */
-
-.info-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:18px;
-
-    position:relative;
-    z-index:2;
-}
-
-/* BOXES */
-
-.box{
-    background:white;
-    border-radius:24px;
-    padding:22px;
-
-    box-shadow:
-    0 4px 15px rgba(0,0,0,0.06);
-}
-
-/* FULL WIDTH BOX */
-
-.full-box{
-    margin-top:18px;
-    position:relative;
-    z-index:2;
-}
-
-/* TITLES */
-
-.title{
-    color:#336600;
-    font-size:13px;
-    font-weight:500;
-    margin-bottom:10px;
-}
-
-/* CONTENT */
-
-.content{
-    color:#222;
-    font-size:16px;
-    font-weight:500;
-    line-height:1.5;
-}
-
-/* FOOTER */
-
-.footer{
-    margin-top:22px;
-    color:#35551f;
-    font-size:11px;
-    text-align:center;
-    position:relative;
-    z-index:2;
-    opacity:0.8;
-}
-
-</style>
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<div class="container">
+<div class="page-wrapper">
 
-    <div class="circle1"></div>
-    <div class="circle2"></div>
+    <section class="hero-card">
 
-    <!-- HEADER -->
+        <div class="circle1"></div>
+        <div class="circle2"></div>
 
-    <div class="header">
+        <div class="hero-content">
 
-        <h1>PHP Syntax Practice</h1>
+            <h1>CiviVote Kenya</h1>
 
-        <p>
-            Backend Development Fundamentals
-        </p>
+            <p class="subtitle">
 
-    </div>
+                Voter Registration System
 
-    <!-- INFO GRID -->
+            </p>
 
-    <div class="info-grid">
+            <!-- Information Cards -->
 
-        <!-- BOX 1 -->
+            <div class="info-grid">
 
-        <div class="box">
+                <div class="card">
 
-            <div class="title">
-                System Name
+                    <h3>System Name</h3>
+
+                    <p>
+
+                        <?php
+
+                        $systemName = "Voter Registration System";
+
+                        echo $systemName;
+
+                        ?>
+
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Programming Language</h3>
+
+                    <p>
+
+                        <?php
+
+                        $language = "PHP";
+
+                        echo $language;
+
+                        ?>
+
+                    </p>
+
+                </div>
+
             </div>
 
-            <div class="content">
+            <!-- Welcome Message -->
 
-                <?php
+            <div class="card full-box">
 
-                    $systemName =
-                    "Voter Registration System";
+                <h3>Welcome Message</h3>
 
-                    echo $systemName;
+                <p>
 
-                ?>
+                    <?php
+
+                    echo "Welcome to the CiviVote Kenya Voter Registration System. This page demonstrates PHP syntax, variables, echo statements and dynamic content generation.";
+
+                    ?>
+
+                </p>
+
+            </div>
+
+            <!-- Current Year -->
+
+            <div class="card full-box">
+
+                <h3>Current Year</h3>
+
+                <p>
+
+                    <?php
+
+                    echo date("Y");
+
+                    ?>
+
+                </p>
 
             </div>
 
         </div>
 
-        <!-- BOX 2 -->
+    </section>
 
-        <div class="box">
+    <footer>
 
-            <div class="title">
-                Logged In User
-            </div>
+        © <?php echo date("Y"); ?> CiviVote Kenya. All Rights Reserved.
 
-            <div class="content">
-
-                <?php
-
-                    $developer =
-                    "System Administrator";
-
-                    echo $developer;
-
-                ?>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- FULL BOX -->
-
-    <div class="box full-box">
-
-        <div class="title">
-            Welcome Message
-        </div>
-
-        <div class="content">
-
-            <?php
-
-                echo "Welcome to the Online Voting Platform";
-
-            ?>
-
-        </div>
-
-    </div>
-
-    <!-- FOOTER -->
-
-    <div class="footer">
-
-        PHP Variables and Echo Statements Successfully Executed
-
-    </div>
+    </footer>
 
 </div>
+
+<script src="script.js"></script>
 
 </body>
 
