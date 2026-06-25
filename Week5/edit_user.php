@@ -11,27 +11,30 @@ $message = "";
 
 if(isset($_POST['update'])){
 
-    $id = $_POST['id'];
+    $id = (int)$_POST['id'];
 
-    $username = $_POST['username'];
+    $username = trim($_POST['username']);
 
     mysqli_query(
 
         $conn,
 
         "UPDATE users
-
         SET username='$username'
-
         WHERE id='$id'"
+
     );
 
-    $message = "User Updated Successfully";
+    $message = "User updated successfully.";
+
 }
 
 $result = mysqli_query(
+
     $conn,
+
     "SELECT * FROM users"
+
 );
 
 ?>
@@ -46,136 +49,164 @@ $result = mysqli_query(
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Edit Users</title>
+<title>CiviVote Kenya | Edit User</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="css/style.css">
+
 <style>
 
-body{
-    margin:0;
-    padding:40px;
-
-    font-family:'Poppins', sans-serif;
-
-    background:#eef1e8;
-}
-
 .container{
-    width:85%;
 
-    margin:auto;
+    max-width:800px;
 
-    background:#b8d98a;
+    padding:30px;
 
-    padding:40px;
-
-    border-radius:40px;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
 }
 
-h1{
+.logo{
+
+    position:absolute;
+
+    top:18px;
+
+    left:22px;
+
+    color:#245000;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    z-index:2;
+
+}
+
+.page-title{
+
     text-align:center;
 
     color:#245000;
 
-    font-size:30px;
+    font-size:22px;
 
-    margin-bottom:10px;
-}
+    font-weight:600;
 
-.subtitle{
-    text-align:center;
-
-    color:#4b5d36;
-
-    font-size:13px;
-
-    margin-bottom:30px;
-}
-
-.message{
-    text-align:center;
-
-    color:#245000;
-
-    font-size:12px;
+    margin-top:12px;
 
     margin-bottom:20px;
 
-    font-weight:500;
+}
+
+.message{
+
+    text-align:center;
+
+    color:#245000;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    margin-bottom:18px;
+
 }
 
 table{
+
     width:100%;
 
     border-collapse:collapse;
 
     background:white;
 
-    border-radius:25px;
+    border-radius:20px;
 
     overflow:hidden;
+
 }
 
 th{
+
     background:#245000;
 
     color:white;
 
-    padding:18px;
+    padding:12px;
 
     font-size:13px;
+
 }
 
 td{
-    padding:16px;
+
+    padding:12px;
 
     text-align:center;
 
-    font-size:12px;
-
-    color:#35551f;
-
     border-bottom:1px solid #e5e5e5;
+
+    font-size:13px;
+
 }
 
-input{
-    padding:10px;
+tr:hover{
 
-    border:none;
+    background:#f6f9f2;
 
-    border-radius:20px;
+}
 
-    background:#f3f3f3;
+.username-input{
 
-    font-size:12px;
+    width:170px;
 
-    width:120px;
+    padding:8px;
+
+    border:1px solid #d8d8d8;
+
+    border-radius:8px;
+
+    font-size:13px;
+
+    font-family:'Poppins',sans-serif;
 
     outline:none;
+
 }
 
-button{
-    padding:10px 18px;
+.username-input:focus{
 
-    border:none;
+    border-color:#4f8b1f;
 
-    border-radius:25px;
+}
+
+.update-btn{
+
+    padding:8px 18px;
 
     background:#245000;
 
     color:white;
 
-    font-size:12px;
+    border:none;
+
+    border-radius:8px;
 
     cursor:pointer;
+
+    font-size:13px;
+
+    font-family:'Poppins',sans-serif;
+
+    transition:.3s;
+
 }
 
-button:hover{
+.update-btn:hover{
+
     background:#336600;
+
 }
 
 </style>
@@ -186,85 +217,109 @@ button:hover{
 
 <div class="container">
 
-    <h1>
-        Update Users
-    </h1>
+    <div class="circle1"></div>
 
-    <div class="subtitle">
+    <div class="circle2"></div>
 
-        Editing existing user records
-        from the database.
+    <div class="logo">
+
+        CiviVote Kenya
 
     </div>
 
-    <div class="message">
-        <?php echo $message; ?>
-    </div>
+    <div class="content">
 
-    <table>
+        <h2 class="page-title">
 
-        <tr>
+            Edit User
 
-            <th>ID</th>
+        </h2>
 
-            <th>Username</th>
+        <?php if($message != ""){ ?>
 
-            <th>Update</th>
+        <div class="message">
 
-        </tr>
+            <?php echo $message; ?>
 
-        <?php
-
-        while($row = mysqli_fetch_assoc($result)){
-
-        ?>
-
-        <tr>
-
-        <form method="POST">
-
-            <td>
-
-                <?php echo $row['id']; ?>
-
-                <input
-                    type="hidden"
-                    name="id"
-                    value="<?php echo $row['id']; ?>"
-                >
-
-            </td>
-
-            <td>
-
-                <input
-                    type="text"
-                    name="username"
-                    value="<?php echo $row['username']; ?>"
-                >
-
-            </td>
-
-            <td>
-
-                <button
-                    type="submit"
-                    name="update"
-                >
-
-                    Update
-
-                </button>
-
-            </td>
-
-        </form>
-
-        </tr>
+        </div>
 
         <?php } ?>
 
-    </table>
+        <table>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Username</th>
+
+                <th>Update</th>
+
+            </tr>
+
+            <?php while($row = mysqli_fetch_assoc($result)){ ?>
+
+            <tr>
+
+                <form method="POST">
+
+                    <td>
+
+                        <?php echo $row['id']; ?>
+
+                        <input
+                            type="hidden"
+                            name="id"
+                            value="<?php echo $row['id']; ?>"
+                        >
+
+                    </td>
+
+                    <td>
+
+                        <input
+
+                            class="username-input"
+
+                            type="text"
+
+                            name="username"
+
+                            value="<?php echo htmlspecialchars($row['username']); ?>"
+
+                            required
+
+                        >
+
+                    </td>
+
+                    <td>
+
+                        <button
+
+                            class="update-btn"
+
+                            type="submit"
+
+                            name="update"
+
+                        >
+
+                            Update
+
+                        </button>
+
+                    </td>
+
+                </form>
+
+            </tr>
+
+            <?php } ?>
+
+        </table>
+
+    </div>
 
 </div>
 

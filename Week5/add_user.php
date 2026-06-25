@@ -11,23 +11,36 @@ $message = "";
 
 if(isset($_POST['submit'])){
 
-    $username = $_POST['username'];
+   $username = trim($_POST['username']);
 
-    $password = $_POST['password'];
+$password = password_hash(
 
-    $insert = mysqli_query(
+    $_POST['password'],
 
-        $conn,
+    PASSWORD_DEFAULT
 
-        "INSERT INTO users(username, password)
+);
 
-        VALUES('$username', '$password')"
-    );
+$insert = mysqli_query(
+
+    $conn,
+
+    "INSERT INTO users(username, password)
+
+    VALUES('$username','$password')"
+
+);
 
     if($insert){
 
-        $message = "User Added Successfully";
+        $message = "User added successfully.";
+
+    }else{
+
+        $message = "Failed to add user.";
+
     }
+
 }
 
 ?>
@@ -39,191 +52,79 @@ if(isset($_POST['submit'])){
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add User</title>
+<title>CiviVote Kenya | Add User</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="css/style.css">
+
 <style>
 
-body{
-    margin:0;
-    padding:0;
-
-    font-family:'Poppins', sans-serif;
-
-    background:#eef1e8;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    min-height:100vh;
-}
-
 .container{
-    width:460px;
 
-    background:#b8d98a;
+    max-width:450px;
 
-    padding:45px;
-
-    border-radius:40px;
-
-    position:relative;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
 }
 
-.circle1{
-    position:absolute;
+.page-title{
 
-    width:170px;
-    height:170px;
-
-    background:rgba(255,255,255,0.12);
-
-    border-radius:50%;
-
-    top:-60px;
-    right:-60px;
-}
-
-.circle2{
-    position:absolute;
-
-    width:120px;
-    height:120px;
-
-    background:rgba(255,255,255,0.10);
-
-    border-radius:50%;
-
-    bottom:-40px;
-    left:-40px;
-}
-
-.content{
-    position:relative;
-    z-index:2;
-}
-
-.icon-circle{
-    width:85px;
-    height:85px;
-
-    background:white;
-
-    border-radius:50%;
-
-    margin:auto;
-    margin-bottom:30px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:34px;
-}
-
-h1{
     text-align:center;
 
     color:#245000;
 
-    font-size:30px;
+    font-size:24px;
 
-    margin-bottom:8px;
-}
+    font-weight:600;
 
-.subtitle{
-    text-align:center;
+    margin-bottom:25px;
 
-    color:#4b5d36;
-
-    font-size:13px;
-
-    margin-bottom:35px;
-
-    line-height:1.6;
-}
-
-label{
-    display:block;
-
-    color:#466128;
-
-    font-size:12px;
-
-    margin-bottom:8px;
-    margin-top:18px;
-
-    font-weight:500;
-}
-
-input{
-    width:100%;
-
-    padding:15px;
-
-    border:none;
-
-    border-radius:40px;
-
-    background:white;
-
-    font-size:13px;
-
-    font-family:'Poppins', sans-serif;
-
-    outline:none;
-
-    box-sizing:border-box;
-}
-
-button{
-    width:100%;
-
-    padding:15px;
-
-    margin-top:30px;
-
-    border:none;
-
-    border-radius:40px;
-
-    background:#245000;
-
-    color:white;
-
-    font-size:14px;
-
-    font-weight:500;
-
-    cursor:pointer;
-
-    transition:0.3s;
-}
-
-button:hover{
-    background:#336600;
 }
 
 .message{
-    margin-top:18px;
+
+    margin-top:20px;
 
     text-align:center;
 
-    font-size:12px;
-
-    font-weight:500;
+    font-weight:600;
 
     color:#245000;
+
+}
+.logo{
+
+    position:absolute;
+
+    top:18px;
+
+    left:22px;
+
+    color:#245000;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    z-index:2;
+
+}
+
+.page-title{
+
+    text-align:center;
+
+    color:#245000;
+
+    font-size:24px;
+
+    font-weight:600;
+
+    margin-top:20px;
+
+    margin-bottom:25px;
+
 }
 
 </style>
@@ -235,28 +136,30 @@ button:hover{
 <div class="container">
 
     <div class="circle1"></div>
+
     <div class="circle2"></div>
+
+    <div class="logo">
+
+    CiviVote Kenya
+
+</div> 
 
     <div class="content">
 
-        <div class="icon-circle">
-            👤
-        </div>
+        <h2 class="page-title">
 
-        <h1>
-            Add User
-        </h1>
+    Add User
 
-        <div class="subtitle">
-
-            Create and save new users
-            into the system database.
-
-        </div>
+      </h2>
 
         <form method="POST">
 
-            <label>Username</label>
+            <label>
+
+                Username
+
+            </label>
 
             <input
                 type="text"
@@ -265,7 +168,11 @@ button:hover{
                 required
             >
 
-            <label>Password</label>
+            <label>
+
+                Password
+
+            </label>
 
             <input
                 type="password"
@@ -274,14 +181,25 @@ button:hover{
                 required
             >
 
-            <button type="submit" name="submit">
+            <button
+                type="submit"
+                name="submit"
+            >
+
                 Save User
+
             </button>
 
         </form>
 
         <div class="message">
-            <?php echo $message; ?>
+
+            <?php
+
+            echo $message;
+
+            ?>
+
         </div>
 
     </div>

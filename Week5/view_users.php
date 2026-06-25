@@ -24,92 +24,110 @@ $result = mysqli_query(
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>View Users</title>
+<title>CiviVote Kenya | View Users</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="css/style.css">
+
 <style>
 
-body{
-    margin:0;
-    padding:40px;
-
-    font-family:'Poppins', sans-serif;
-
-    background:#eef1e8;
-}
-
 .container{
-    width:85%;
 
-    margin:auto;
+    max-width:900px;
 
-    background:#b8d98a;
-
-    padding:40px;
-
-    border-radius:40px;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
 }
 
-h1{
+.logo{
+
+    position:absolute;
+
+    top:18px;
+
+    left:22px;
+
+    color:#245000;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    z-index:2;
+
+}
+
+.page-title{
+
     text-align:center;
 
     color:#245000;
 
-    font-size:30px;
+    font-size:26px;
 
-    margin-bottom:10px;
-}
+    font-weight:600;
 
-.subtitle{
-    text-align:center;
+    margin-top:20px;
 
-    color:#4b5d36;
+    margin-bottom:30px;
 
-    font-size:13px;
-
-    margin-bottom:35px;
 }
 
 table{
+
     width:100%;
 
     border-collapse:collapse;
 
     background:white;
 
-    border-radius:25px;
+    border-radius:20px;
 
     overflow:hidden;
+
 }
 
 th{
+
     background:#245000;
 
     color:white;
 
-    padding:18px;
+    padding:15px;
 
-    font-size:13px;
+    font-size:14px;
+
 }
 
 td{
-    padding:16px;
+
+    padding:15px;
 
     text-align:center;
 
-    font-size:12px;
+    border-bottom:1px solid #e5e5e5;
+
+    font-size:14px;
 
     color:#35551f;
 
-    border-bottom:1px solid #e5e5e5;
 }
 
 tr:hover{
+
     background:#f6f9f2;
+
+}
+
+.empty-message{
+
+    text-align:center;
+
+    padding:20px;
+
+    font-size:15px;
+
+    color:#666;
+
 }
 
 </style>
@@ -120,54 +138,93 @@ tr:hover{
 
 <div class="container">
 
-    <h1>
-        Registered Users
-    </h1>
+    <div class="circle1"></div>
 
-    <div class="subtitle">
+    <div class="circle2"></div>
 
-        Viewing records retrieved
-        dynamically from the database.
+    <div class="logo">
+
+        CiviVote Kenya
 
     </div>
 
-    <table>
+    <div class="content">
 
-        <tr>
+        <h2 class="page-title">
 
-            <th>ID</th>
+            View Users
 
-            <th>Username</th>
+        </h2>
 
-            <th>Password</th>
+        <table>
 
-        </tr>
+            <tr>
 
-        <?php
+                <th>ID</th>
 
-        while($row = mysqli_fetch_assoc($result)){
+                <th>Username</th>
 
-        ?>
+                <th>Password</th>
 
-        <tr>
+            </tr>
 
-            <td>
-                <?php echo $row['id']; ?>
-            </td>
+            <?php
 
-            <td>
-                <?php echo $row['username']; ?>
-            </td>
+            if(mysqli_num_rows($result) > 0){
 
-            <td>
-                ********
-            </td>
+                while($row = mysqli_fetch_assoc($result)){
 
-        </tr>
+            ?>
 
-        <?php } ?>
+            <tr>
 
-    </table>
+                <td>
+
+                    <?php echo $row['id']; ?>
+
+                </td>
+
+                <td>
+
+                    <?php echo htmlspecialchars($row['username']); ?>
+
+                </td>
+
+                <td>
+
+                    ********
+
+                </td>
+
+            </tr>
+
+            <?php
+
+                }
+
+            }else{
+
+            ?>
+
+            <tr>
+
+                <td colspan="3" class="empty-message">
+
+                    No users found.
+
+                </td>
+
+            </tr>
+
+            <?php
+
+            }
+
+            ?>
+
+        </table>
+
+    </div>
 
 </div>
 
