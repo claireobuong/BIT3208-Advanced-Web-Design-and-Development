@@ -1,3 +1,13 @@
+<?php
+
+$conn = mysqli_connect(
+    "localhost",
+    "root",
+    "",
+    "week6db"
+);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,171 +22,265 @@
 
 <style>
 
-body{
+*{
     margin:0;
     padding:0;
-    font-family:'Poppins', sans-serif;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
     background:#eef1e8;
 
     display:flex;
     justify-content:center;
     align-items:center;
+
     min-height:100vh;
+
+    padding:25px;
+}
+
+/* SMALL LOGO */
+
+.logo{
+
+    position:absolute;
+
+    top:20px;
+    left:25px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:#245000;
+
 }
 
 /* MAIN CARD */
 
 .container{
-    width:720px;
-    background:#b8d98a;
-    border-radius:35px;
-    padding:35px;
-    box-sizing:border-box;
 
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
+    width:100%;
+    max-width:650px;
+
+    background:#b8d98a;
+
+    border-radius:30px;
+
+    padding:35px;
 
     position:relative;
+
     overflow:hidden;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.08);
+
 }
 
-/* BACKGROUND CIRCLES */
+/* DECORATION */
 
 .circle1{
+
     position:absolute;
-    width:180px;
-    height:180px;
-    background:rgba(255,255,255,0.18);
+
+    width:170px;
+    height:170px;
+
+    background:rgba(255,255,255,.18);
+
     border-radius:50%;
+
     top:-60px;
     right:-60px;
+
 }
 
 .circle2{
+
     position:absolute;
+
     width:120px;
     height:120px;
-    background:rgba(255,255,255,0.15);
+
+    background:rgba(255,255,255,.15);
+
     border-radius:50%;
+
     bottom:-40px;
     left:-40px;
+
 }
 
 /* HEADER */
 
 .header{
+
     position:relative;
+
     z-index:2;
+
 }
 
 .header h1{
+
     color:#245000;
-    font-size:30px;
-    margin-bottom:6px;
-    font-weight:600;
-    letter-spacing:-0.5px;
+
+    font-size:28px;
+
+    margin-bottom:8px;
+
 }
 
 .header p{
+
     color:#466128;
-    font-size:13px;
-    margin-bottom:30px;
-    font-weight:400;
+
+    font-size:14px;
+
+    margin-bottom:25px;
+
 }
 
-/* INFO GRID */
+/* GRID */
 
 .info-grid{
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:repeat(2,1fr);
+
     gap:18px;
 
     position:relative;
-    z-index:2;
-}
 
-/* BOXES */
+    z-index:2;
+
+}
 
 .box{
+
     background:white;
-    border-radius:24px;
-    padding:22px;
+
+    border-radius:20px;
+
+    padding:20px;
 
     box-shadow:
-    0 4px 15px rgba(0,0,0,0.06);
-}
+    0 4px 12px rgba(0,0,0,.05);
 
-/* FULL BOX */
+}
 
 .full-box{
-    margin-top:18px;
-    position:relative;
-    z-index:2;
-}
 
-/* TITLES */
+    margin-top:18px;
+
+}
 
 .title{
-    color:#336600;
+
+    color:#2d6500;
+
     font-size:13px;
-    font-weight:500;
-    margin-bottom:10px;
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
 }
 
-/* CONTENT */
-
 .content{
-    color:#222;
-    font-size:16px;
-    font-weight:500;
-    line-height:1.5;
+
+    color:#333;
+
+    font-size:15px;
+
+    line-height:1.6;
+
 }
 
 /* STATUS */
 
 .status{
-    margin-top:20px;
+
+    margin-top:25px;
+
     text-align:center;
+
     position:relative;
+
     z-index:2;
+
 }
 
 .success{
-    background:white;
+
     display:inline-block;
-    padding:14px 28px;
-    border-radius:40px;
-    color:#1d6b00;
-    font-size:15px;
+
+    background:white;
+
+    color:#1f7a1f;
+
+    padding:12px 28px;
+
+    border-radius:30px;
+
     font-weight:600;
 
-    box-shadow:
-    0 4px 12px rgba(0,0,0,0.05);
 }
 
 .error{
-    background:white;
+
     display:inline-block;
-    padding:14px 28px;
-    border-radius:40px;
-    color:red;
-    font-size:15px;
+
+    background:white;
+
+    color:#d32f2f;
+
+    padding:12px 28px;
+
+    border-radius:30px;
+
     font-weight:600;
 
-    box-shadow:
-    0 4px 12px rgba(0,0,0,0.05);
 }
 
 /* FOOTER */
 
 .footer{
-    margin-top:22px;
-    color:#35551f;
-    font-size:11px;
+
+    margin-top:25px;
+
     text-align:center;
+
+    color:#35551f;
+
+    font-size:12px;
+
     position:relative;
+
     z-index:2;
-    opacity:0.8;
+
+}
+
+@media(max-width:700px){
+
+.info-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+.container{
+
+    padding:25px;
+
+}
+
 }
 
 </style>
@@ -185,12 +289,14 @@ body{
 
 <body>
 
+<div class="logo">
+    CiviVote Kenya
+</div>
+
 <div class="container">
 
     <div class="circle1"></div>
     <div class="circle2"></div>
-
-    <!-- HEADER -->
 
     <div class="header">
 
@@ -202,11 +308,7 @@ body{
 
     </div>
 
-    <!-- INFO GRID -->
-
     <div class="info-grid">
-
-        <!-- BOX 1 -->
 
         <div class="box">
 
@@ -220,8 +322,6 @@ body{
 
         </div>
 
-        <!-- BOX 2 -->
-
         <div class="box">
 
             <div class="title">
@@ -229,14 +329,12 @@ body{
             </div>
 
             <div class="content">
-                week3db
+                week6db
             </div>
 
         </div>
 
     </div>
-
-    <!-- FULL BOX -->
 
     <div class="box full-box">
 
@@ -256,18 +354,9 @@ body{
 
     </div>
 
-    <!-- STATUS -->
-
     <div class="status">
 
         <?php
-
-        $conn = mysqli_connect(
-            "localhost",
-            "root",
-            "",
-            "week3db"
-        );
 
         if($conn){
 
@@ -275,7 +364,7 @@ body{
                     Connected Successfully
                   </div>";
 
-        } else {
+        }else{
 
             echo "<div class='error'>
                     Connection Failed
@@ -287,11 +376,9 @@ body{
 
     </div>
 
-    <!-- FOOTER -->
-
     <div class="footer">
 
-        Database Connection Successfully Tested Using PHP
+        Database connection successfully tested using PHP.
 
     </div>
 

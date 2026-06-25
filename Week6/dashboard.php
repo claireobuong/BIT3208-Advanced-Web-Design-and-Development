@@ -2,9 +2,12 @@
 
 session_start();
 
-if(isset($_POST['username'])){
+if(!isset($_SESSION['user'])){
 
-    $_SESSION['user'] = $_POST['username'];
+    header("Location: login.php");
+
+    exit();
+
 }
 
 $username = $_SESSION['user'];
@@ -17,177 +20,121 @@ $username = $_SESSION['user'];
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard</title>
+<title>CiviVote Kenya | Dashboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="css/style.css">
+
 <style>
 
-body{
-    margin:0;
-    padding:0;
+.container{
 
-    font-family:'Poppins', sans-serif;
+    width:95%;
 
-    background:#eef1e8;
+    max-width:1100px;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    padding:30px;
 
-    min-height:100vh;
 }
 
-.container{
-    width:500px;
+.dashboard-card{
 
-    background:#b8d98a;
+    max-width:500px;
 
-    padding:50px;
-
-    border-radius:40px;
+    margin:30px auto 0 auto;
 
     text-align:center;
 
-    position:relative;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
 }
-
-/* BACKGROUND CIRCLES */
-
-.circle1{
-    position:absolute;
-
-    width:180px;
-    height:180px;
-
-    background:rgba(255,255,255,0.12);
-
-    border-radius:50%;
-
-    top:-70px;
-    right:-60px;
-}
-
-.circle2{
-    position:absolute;
-
-    width:130px;
-    height:130px;
-
-    background:rgba(255,255,255,0.10);
-
-    border-radius:50%;
-
-    bottom:-50px;
-    left:-40px;
-}
-
-.content{
-    position:relative;
-    z-index:2;
-}
-
-/* ICON */
 
 .icon-circle{
-    width:90px;
-    height:90px;
+
+    width:85px;
+
+    height:85px;
+
+    margin:20px auto;
 
     background:white;
 
     border-radius:50%;
 
-    margin:auto;
-    margin-bottom:25px;
-
     display:flex;
+
     justify-content:center;
+
     align-items:center;
 
-    font-size:38px;
+    font-size:36px;
+
 }
 
-h1{
+.page-title{
+
     color:#245000;
 
-    font-size:28px;
+    font-size:26px;
 
-    margin-bottom:12px;
+    font-weight:600;
+
+    margin-bottom:15px;
+
 }
 
-p{
+.message{
+
     color:#35551f;
 
-    font-size:13px;
+    font-size:14px;
 
     line-height:1.8;
 
     margin-bottom:30px;
-}
 
-/* BUTTON */
+}
 
 button{
-    padding:14px 40px;
 
-    border:none;
+    width:180px;
 
-    border-radius:40px;
-
-    background:#245000;
-
-    color:white;
-
-    font-size:14px;
-
-    cursor:pointer;
-
-    transition:0.3s;
 }
-
-button:hover{
-    background:#336600;
-}
-
-/* SMALL CARD */
 
 .info-card{
-    background:rgba(255,255,255,0.18);
+
+    margin-top:25px;
+
+    background:rgba(255,255,255,.18);
 
     padding:18px;
 
-    border-radius:25px;
+    border-radius:20px;
 
-    margin-top:25px;
 }
 
 .info-title{
+
     color:#245000;
 
     font-size:14px;
 
     font-weight:600;
 
-    margin-bottom:6px;
+    margin-bottom:8px;
+
 }
 
 .info-text{
+
     color:#35551f;
 
-    font-size:11px;
+    font-size:12px;
 
     line-height:1.7;
-}
 
-a{
-    text-decoration:none;
 }
 
 </style>
@@ -199,43 +146,58 @@ a{
 <div class="container">
 
     <div class="circle1"></div>
+
     <div class="circle2"></div>
+
+    <?php include("navbar.php"); ?>
 
     <div class="content">
 
-        <div class="icon-circle">
-            ✅
-        </div>
+        <div class="dashboard-card">
 
-        <h1>
-            Welcome <?php echo $username; ?>
-        </h1>
+            <div class="icon-circle">
 
-        <p>
+                ✅
 
-            You have successfully logged into
-            the voter registration system.
-
-        </p>
-
-        <a href="login.php">
-
-    <button>
-        Logout
-    </button>
-
-</a>
-
-        <div class="info-card">
-
-            <div class="info-title">
-                Session Active
             </div>
 
-            <div class="info-text">
+            <h1 class="page-title">
 
-                User session successfully
-                created after login.
+                Welcome <?php echo htmlspecialchars($username); ?>
+
+            </h1>
+
+            <div class="message">
+
+                You have successfully logged into the
+                CiviVote Kenya Voter Registration System.
+
+            </div>
+
+            <a href="logout.php">
+
+                <button type="button">
+
+                    Logout
+
+                </button>
+
+            </a>
+
+            <div class="info-card">
+
+                <div class="info-title">
+
+                    Session Active
+
+                </div>
+
+                <div class="info-text">
+
+                    Your login session has been verified successfully.
+                    Unauthorized users cannot access this page directly.
+
+                </div>
 
             </div>
 

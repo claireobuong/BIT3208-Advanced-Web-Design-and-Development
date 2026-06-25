@@ -4,35 +4,78 @@ $conn = mysqli_connect(
     "localhost",
     "root",
     "",
-    "week5db"
+    "week6db"
 );
+
+if(!$conn){
+
+    die("Connection failed: " . mysqli_connect_error());
+
+}
 
 $message = "";
 
 if(isset($_POST['update'])){
 
-    $id = $_POST['id'];
+    $id = (int)$_POST['id'];
 
-    $username = $_POST['username'];
+    $username = trim($_POST['username']);
 
-    mysqli_query(
+    if(!empty($username)){
 
-        $conn,
+        $stmt = mysqli_prepare(
 
-        "UPDATE users
+            $conn,
 
-        SET username='$username'
+            "UPDATE users
+             SET username = ?
+             WHERE id = ?"
 
-        WHERE id='$id'"
-    );
+        );
 
-    $message = "User Updated Successfully";
+        mysqli_stmt_bind_param(
+
+            $stmt,
+
+            "si",
+
+            $username,
+
+            $id
+
+        );
+
+        if(mysqli_stmt_execute($stmt)){
+
+            $message = "User updated successfully.";
+
+        }else{
+
+            $message = "Failed to update user.";
+
+        }
+
+        mysqli_stmt_close($stmt);
+
+    }else{
+
+        $message = "Username cannot be empty.";
+
+    }
+
 }
 
-$result = mysqli_query(
+$stmt = mysqli_prepare(
+
     $conn,
-    "SELECT * FROM users"
+
+    "SELECT id, username FROM users"
+
 );
+
+mysqli_stmt_execute($stmt);
+
+$result = mysqli_stmt_get_result($stmt);
 
 ?>
 
@@ -46,136 +89,154 @@ $result = mysqli_query(
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Edit Users</title>
+<title>CiviVote Kenya | Edit User</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="css/style.css">
+
 <style>
 
-body{
-    margin:0;
-    padding:40px;
-
-    font-family:'Poppins', sans-serif;
-
-    background:#eef1e8;
-}
-
 .container{
-    width:85%;
 
-    margin:auto;
+    width:95%;
 
-    background:#b8d98a;
+    max-width:1100px;
 
-    padding:40px;
+    padding:30px;
 
-    border-radius:40px;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
 }
 
-h1{
+.table-box{
+
+    width:90%;
+
+    margin:30px auto 0 auto;
+
+}
+
+.page-title{
+
     text-align:center;
 
     color:#245000;
 
-    font-size:30px;
+    font-size:22px;
 
-    margin-bottom:10px;
-}
-
-.subtitle{
-    text-align:center;
-
-    color:#4b5d36;
-
-    font-size:13px;
-
-    margin-bottom:30px;
-}
-
-.message{
-    text-align:center;
-
-    color:#245000;
-
-    font-size:12px;
+    font-weight:600;
 
     margin-bottom:20px;
 
-    font-weight:500;
+}
+
+.message{
+
+    text-align:center;
+
+    color:#245000;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    margin-bottom:18px;
+
 }
 
 table{
+
     width:100%;
 
     border-collapse:collapse;
 
     background:white;
 
-    border-radius:25px;
+    border-radius:20px;
 
     overflow:hidden;
+
 }
 
 th{
+
     background:#245000;
 
     color:white;
 
-    padding:18px;
+    padding:12px;
 
     font-size:13px;
+
 }
 
 td{
-    padding:16px;
+
+    padding:12px;
 
     text-align:center;
 
-    font-size:12px;
-
-    color:#35551f;
-
     border-bottom:1px solid #e5e5e5;
+
+    font-size:13px;
+
 }
 
-input{
-    padding:10px;
+tr:hover{
 
-    border:none;
+    background:#f6f9f2;
 
-    border-radius:20px;
+}
 
-    background:#f3f3f3;
+.username-input{
 
-    font-size:12px;
+    width:180px;
 
-    width:120px;
+    padding:8px;
+
+    border:1px solid #d8d8d8;
+
+    border-radius:8px;
+
+    font-size:13px;
+
+    font-family:'Poppins',sans-serif;
 
     outline:none;
+
 }
 
-button{
-    padding:10px 18px;
+.username-input:focus{
 
-    border:none;
+    border-color:#4f8b1f;
 
-    border-radius:25px;
+}
+
+.update-btn{
+
+    padding:8px 18px;
 
     background:#245000;
 
     color:white;
 
-    font-size:12px;
+    border:none;
+
+    border-radius:8px;
 
     cursor:pointer;
+
+    font-size:13px;
+
+    font-family:'Poppins',sans-serif;
+
+    transition:.3s;
+
 }
 
-button:hover{
+.update-btn:hover{
+
     background:#336600;
+
 }
 
 </style>
@@ -186,88 +247,120 @@ button:hover{
 
 <div class="container">
 
-    <h1>
-        Update Users
-    </h1>
+    <div class="circle1"></div>
 
-    <div class="subtitle">
+    <div class="circle2"></div>
 
-        Editing existing user records
-        from the database.
+    <?php include("navbar.php"); ?>
+
+    <div class="content">
+
+        <div class="table-box">
+
+            <h2 class="page-title">
+
+                Edit User
+
+            </h2>
+
+            <?php if($message != ""){ ?>
+
+            <div class="message">
+
+                <?php echo $message; ?>
+
+            </div>
+
+            <?php } ?>
+
+            <table>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Username</th>
+
+                    <th>Update</th>
+
+                </tr>
+
+                <?php while($row = mysqli_fetch_assoc($result)){ ?>
+
+                <tr>
+
+                    <form method="POST">
+
+                        <td>
+
+                            <?php echo $row['id']; ?>
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<?php echo $row['id']; ?>"
+                            >
+
+                        </td>
+
+                        <td>
+
+                            <input
+
+                                class="username-input"
+
+                                type="text"
+
+                                name="username"
+
+                                value="<?php echo htmlspecialchars($row['username']); ?>"
+
+                                required
+
+                            >
+
+                        </td>
+
+                        <td>
+
+                            <button
+
+                                class="update-btn"
+
+                                type="submit"
+
+                                name="update"
+
+                            >
+
+                                Update
+
+                            </button>
+
+                        </td>
+
+                    </form>
+
+                </tr>
+
+                <?php } ?>
+
+            </table>
+
+        </div>
 
     </div>
-
-    <div class="message">
-        <?php echo $message; ?>
-    </div>
-
-    <table>
-
-        <tr>
-
-            <th>ID</th>
-
-            <th>Username</th>
-
-            <th>Update</th>
-
-        </tr>
-
-        <?php
-
-        while($row = mysqli_fetch_assoc($result)){
-
-        ?>
-
-        <tr>
-
-        <form method="POST">
-
-            <td>
-
-                <?php echo $row['id']; ?>
-
-                <input
-                    type="hidden"
-                    name="id"
-                    value="<?php echo $row['id']; ?>"
-                >
-
-            </td>
-
-            <td>
-
-                <input
-                    type="text"
-                    name="username"
-                    value="<?php echo $row['username']; ?>"
-                >
-
-            </td>
-
-            <td>
-
-                <button
-                    type="submit"
-                    name="update"
-                >
-
-                    Update
-
-                </button>
-
-            </td>
-
-        </form>
-
-        </tr>
-
-        <?php } ?>
-
-    </table>
 
 </div>
 
 </body>
 
 </html>
+
+<?php
+
+mysqli_stmt_close($stmt);
+
+mysqli_close($conn);
+
+?>

@@ -4,27 +4,68 @@ $conn = mysqli_connect(
     "localhost",
     "root",
     "",
-    "week5db"
+    "week6db"
 );
+
+if(!$conn){
+
+    die("Connection failed: " . mysqli_connect_error());
+
+}
 
 $message = "";
 
 if(isset($_GET['delete'])){
 
-    $id = $_GET['delete'];
+    $id = (int)$_GET['delete'];
 
-    mysqli_query(
-        $conn,
-        "DELETE FROM users WHERE id='$id'"
-    );
+    if($id > 0){
 
-    $message = "User Deleted Successfully";
+        $stmt = mysqli_prepare(
+
+            $conn,
+
+            "DELETE FROM users WHERE id = ?"
+
+        );
+
+        mysqli_stmt_bind_param(
+
+            $stmt,
+
+            "i",
+
+            $id
+
+        );
+
+        if(mysqli_stmt_execute($stmt)){
+
+            $message = "User deleted successfully.";
+
+        }else{
+
+            $message = "Failed to delete user.";
+
+        }
+
+        mysqli_stmt_close($stmt);
+
+    }
+
 }
 
-$result = mysqli_query(
+$stmt = mysqli_prepare(
+
     $conn,
-    "SELECT * FROM users"
+
+    "SELECT id, username FROM users"
+
 );
+
+mysqli_stmt_execute($stmt);
+
+$result = mysqli_stmt_get_result($stmt);
 
 ?>
 
@@ -38,124 +79,140 @@ $result = mysqli_query(
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Delete Users</title>
+<title>CiviVote Kenya | Delete User</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="css/style.css">
+
 <style>
 
-body{
-    margin:0;
-    padding:40px;
-
-    font-family:'Poppins', sans-serif;
-
-    background:#eef1e8;
-}
-
 .container{
-    width:85%;
 
-    margin:auto;
+    width:95%;
 
-    background:#b8d98a;
+    max-width:1100px;
 
-    padding:40px;
+    padding:30px;
 
-    border-radius:40px;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
 }
 
-h1{
+.table-box{
+
+    width:90%;
+
+    margin:30px auto 0 auto;
+
+}
+
+.page-title{
+
     text-align:center;
 
     color:#245000;
 
-    font-size:30px;
+    font-size:22px;
 
-    margin-bottom:10px;
-}
-
-.subtitle{
-    text-align:center;
-
-    color:#4b5d36;
-
-    font-size:13px;
-
-    margin-bottom:30px;
-}
-
-.message{
-    text-align:center;
-
-    color:#245000;
-
-    font-size:12px;
+    font-weight:600;
 
     margin-bottom:20px;
 
-    font-weight:500;
+}
+
+.message{
+
+    text-align:center;
+
+    color:#245000;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    margin-bottom:18px;
+
 }
 
 table{
+
     width:100%;
 
     border-collapse:collapse;
 
     background:white;
 
-    border-radius:25px;
+    border-radius:20px;
 
     overflow:hidden;
+
 }
 
 th{
+
     background:#245000;
 
     color:white;
 
-    padding:18px;
+    padding:12px;
 
     font-size:13px;
+
 }
 
 td{
-    padding:16px;
+
+    padding:12px;
 
     text-align:center;
 
-    font-size:12px;
-
-    color:#35551f;
-
     border-bottom:1px solid #e5e5e5;
+
+    font-size:13px;
+
+}
+
+tr:hover{
+
+    background:#f6f9f2;
+
 }
 
 .delete-btn{
-    padding:10px 18px;
-
-    border:none;
-
-    border-radius:25px;
-
-    background:#245000;
-
-    color:white;
-
-    font-size:12px;
-
-    text-decoration:none;
 
     display:inline-block;
 
-    transition:0.3s;
+    padding:8px 18px;
+
+    background:#c0392b;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:8px;
+
+    font-size:13px;
+
+    transition:.3s;
+
 }
 
 .delete-btn:hover{
-    background:#336600;
+
+    background:#a93226;
+
+}
+
+.empty-message{
+
+    text-align:center;
+
+    padding:20px;
+
+    color:#666;
+
+    font-size:14px;
+
 }
 
 </style>
@@ -166,79 +223,134 @@ td{
 
 <div class="container">
 
-    <h1>
-        Delete Users
-    </h1>
+    <div class="circle1"></div>
 
-    <div class="subtitle">
+    <div class="circle2"></div>
 
-        Removing user records
-        from the system database.
+    <?php include("navbar.php"); ?>
+
+    <div class="content">
+
+        <div class="table-box">
+
+            <h2 class="page-title">
+
+                Delete User
+
+            </h2>
+
+            <?php if($message != ""){ ?>
+
+            <div class="message">
+
+                <?php echo $message; ?>
+
+            </div>
+
+            <?php } ?>
+
+            <table>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Username</th>
+
+                    <th>Password</th>
+
+                    <th>Delete</th>
+
+                </tr>
+
+                <?php
+
+                if(mysqli_num_rows($result) > 0){
+
+                    while($row = mysqli_fetch_assoc($result)){
+
+                ?>
+
+                <tr>
+
+                    <td>
+
+                        <?php echo $row['id']; ?>
+
+                    </td>
+
+                    <td>
+
+                        <?php echo htmlspecialchars($row['username']); ?>
+
+                    </td>
+
+                    <td>
+
+                        ********
+
+                    </td>
+
+                    <td>
+
+                        <a
+
+                            class="delete-btn"
+
+                            href="delete_user.php?delete=<?php echo $row['id']; ?>"
+
+                            onclick="return confirm('Are you sure you want to delete this user?');"
+
+                        >
+
+                            Delete
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                <?php
+
+                    }
+
+                }else{
+
+                ?>
+
+                <tr>
+
+                    <td colspan="4" class="empty-message">
+
+                        No users found.
+
+                    </td>
+
+                </tr>
+
+                <?php
+
+                }
+
+                ?>
+
+            </table>
+
+        </div>
 
     </div>
-
-    <div class="message">
-        <?php echo $message; ?>
-    </div>
-
-    <table>
-
-        <tr>
-
-            <th>ID</th>
-
-            <th>Username</th>
-
-            <th>Password</th>
-
-            <th>Delete</th>
-
-        </tr>
-
-        <?php
-
-        while($row = mysqli_fetch_assoc($result)){
-
-        ?>
-
-        <tr>
-
-            <td>
-                <?php echo $row['id']; ?>
-            </td>
-
-            <td>
-                <?php echo $row['username']; ?>
-            </td>
-
-            <td>
-                ********
-            </td>
-
-            <td>
-
-                <a
-
-                class="delete-btn"
-
-                href="delete_user.php?delete=<?php echo $row['id']; ?>"
-
-                >
-
-                    Delete
-
-                </a>
-
-            </td>
-
-        </tr>
-
-        <?php } ?>
-
-    </table>
 
 </div>
 
 </body>
 
 </html>
+
+<?php
+
+mysqli_stmt_close($stmt);
+
+mysqli_close($conn);
+
+?>

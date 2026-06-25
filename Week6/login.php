@@ -1,10 +1,99 @@
+<?php
+
+session_start();
+
+$conn = mysqli_connect(
+    "localhost",
+    "root",
+    "",
+    "week6db"
+);
+
+$message = "";
+
+if(!$conn){
+
+    die("Connection failed: " . mysqli_connect_error());
+
+}
+
+if(isset($_POST["login"])){
+
+    $username = trim($_POST["username"]);
+
+    $password = $_POST["password"];
+
+    $stmt = mysqli_prepare(
+
+        $conn,
+
+        "SELECT id, username, password FROM users WHERE username = ?"
+
+    );
+
+    mysqli_stmt_bind_param(
+
+        $stmt,
+
+        "s",
+
+        $username
+
+    );
+
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    if(mysqli_num_rows($result) == 1){
+
+        $user = mysqli_fetch_assoc($result);
+
+        if(password_verify($password, $user["password"])){
+
+            $_SESSION["user"] = $user["username"];
+
+            mysqli_stmt_close($stmt);
+
+            mysqli_close($conn);
+
+            header("Location: dashboard.php");
+
+            exit();
+
+        }else{
+
+            $message = "Incorrect password.";
+
+        }
+
+        mysqli_stmt_close($stmt);
+
+    }else{
+
+        $message = "Username not found.";
+
+        if(isset($stmt)){
+
+            mysqli_stmt_close($stmt);
+
+        }
+
+    }
+
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Admin Login</title>
 
@@ -15,168 +104,177 @@
 body{
     margin:0;
     padding:0;
-    font-family:'Poppins', sans-serif;
+    font-family:'Poppins',sans-serif;
     background:#eef1e8;
 
     display:flex;
     justify-content:center;
     align-items:center;
-
     min-height:100vh;
 }
 
-/* MAIN CONTAINER */
+.logo{
+
+    position:absolute;
+    top:20px;
+    left:25px;
+
+    font-size:16px;
+    font-weight:600;
+    color:#245000;
+
+}
 
 .container{
-    width:460px;
+
+    width:420px;
 
     background:#b8d98a;
 
-    padding:45px;
+    padding:35px;
 
-    border-radius:40px;
+    border-radius:35px;
 
     position:relative;
 
     overflow:hidden;
 
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
 }
 
-/* BACKGROUND CIRCLES */
-
 .circle1{
+
     position:absolute;
 
-    width:170px;
-    height:170px;
+    width:150px;
+    height:150px;
 
-    background:rgba(255,255,255,0.12);
+    background:rgba(255,255,255,.12);
 
     border-radius:50%;
 
-    top:-60px;
-    right:-60px;
+    top:-55px;
+    right:-55px;
+
 }
 
 .circle2{
+
     position:absolute;
 
-    width:120px;
-    height:120px;
+    width:110px;
+    height:110px;
 
-    background:rgba(255,255,255,0.10);
+    background:rgba(255,255,255,.10);
 
     border-radius:50%;
 
-    bottom:-40px;
-    left:-40px;
-}
+    bottom:-35px;
+    left:-35px;
 
-/* CONTENT */
+}
 
 .content{
+
     position:relative;
+
     z-index:2;
+
 }
-
-h1{
-    text-align:center;
-
-    color:#245000;
-
-    font-size:30px;
-
-    margin-bottom:8px;
-
-    font-weight:600;
-}
-
-.subtitle{
-    text-align:center;
-
-    color:#4b5d36;
-
-    font-size:13px;
-
-    margin-bottom:35px;
-
-    line-height:1.6;
-}
-
-/* ICON */
 
 .icon-circle{
-    width:85px;
-    height:85px;
+
+    width:75px;
+    height:75px;
 
     background:white;
 
     border-radius:50%;
 
     margin:auto;
-    margin-bottom:30px;
+    margin-bottom:20px;
 
     display:flex;
     justify-content:center;
     align-items:center;
 
-    font-size:34px;
+    font-size:30px;
+
 }
 
-/* LABELS */
+h1{
+
+    text-align:center;
+
+    color:#245000;
+
+    font-size:26px;
+
+    margin-bottom:6px;
+
+}
+
+.subtitle{
+
+    text-align:center;
+
+    color:#4b5d36;
+
+    font-size:12px;
+
+    margin-bottom:25px;
+
+    line-height:1.6;
+
+}
 
 label{
+
     display:block;
+
+    margin-top:16px;
+    margin-bottom:7px;
 
     color:#466128;
 
     font-size:12px;
 
-    margin-bottom:8px;
-    margin-top:18px;
-
     font-weight:500;
+
 }
 
-/* INPUTS */
-
 input{
+
     width:100%;
 
-    padding:15px;
+    padding:13px;
 
     border:none;
 
-    border-radius:40px;
+    border-radius:30px;
 
     background:white;
 
     font-size:13px;
 
-    font-family:'Poppins', sans-serif;
+    box-sizing:border-box;
 
     outline:none;
 
-    box-sizing:border-box;
-
-    box-shadow:
-    0 4px 10px rgba(0,0,0,0.04);
 }
 
-/* BUTTON */
-
 button{
+
     width:100%;
 
-    padding:15px;
+    padding:13px;
 
-    margin-top:30px;
+    margin-top:25px;
 
     border:none;
 
-    border-radius:40px;
+    border-radius:30px;
 
     background:#245000;
 
@@ -184,47 +282,66 @@ button{
 
     font-size:14px;
 
-    font-weight:500;
+    font-family:'Poppins',sans-serif;
 
     cursor:pointer;
 
-    transition:0.3s;
 }
 
 button:hover{
+
     background:#336600;
+
 }
 
-/* SMALL CARD */
+.message{
 
-.info-card{
-    margin-top:25px;
-
-    background:rgba(255,255,255,0.18);
-
-    padding:18px;
-
-    border-radius:25px;
+    margin-top:18px;
 
     text-align:center;
+
+    color:#c62828;
+
+    font-size:13px;
+
+    font-weight:500;
+
+}
+
+.info-card{
+
+    margin-top:20px;
+
+    background:rgba(255,255,255,.18);
+
+    border-radius:20px;
+
+    padding:15px;
+
+    text-align:center;
+
 }
 
 .info-title{
+
     color:#245000;
 
-    font-size:14px;
+    font-size:13px;
 
     font-weight:600;
 
-    margin-bottom:6px;
+    margin-bottom:5px;
+
 }
 
 .info-text{
+
     color:#35551f;
 
     font-size:11px;
 
-    line-height:1.7;
+    line-height:1.6;
+
 }
 
 </style>
@@ -233,31 +350,45 @@ button:hover{
 
 <body>
 
+<div class="logo">
+
+    CiviVote Kenya
+
+</div>
+
 <div class="container">
 
     <div class="circle1"></div>
+
     <div class="circle2"></div>
 
     <div class="content">
 
         <div class="icon-circle">
+
             🔐
+
         </div>
 
         <h1>
+
             Admin Login
+
         </h1>
 
         <div class="subtitle">
 
-            Secure login portal for the
-            voter registration system.
+            Secure login portal for the voter registration system.
 
         </div>
 
-        <form action="dashboard.php" method="POST">
+        <form method="POST">
 
-            <label>Username</label>
+            <label>
+
+                Username
+
+            </label>
 
             <input
                 type="text"
@@ -266,7 +397,11 @@ button:hover{
                 required
             >
 
-            <label>Password</label>
+            <label>
+
+                Password
+
+            </label>
 
             <input
                 type="password"
@@ -275,22 +410,38 @@ button:hover{
                 required
             >
 
-            <button type="submit">
+            <button
+                type="submit"
+                name="login"
+            >
+
                 Login
+
             </button>
 
         </form>
 
+        <?php
+
+        if($message != ""){
+
+            echo "<div class='message'>" . htmlspecialchars($message) . "</div>";
+
+        }
+
+        ?>
+
         <div class="info-card">
 
             <div class="info-title">
-                Voter Registration System
+
+                Secure Authentication
+
             </div>
 
             <div class="info-text">
 
-                Secure login portal for
-                administrator access.
+                Login credentials are verified using hashed passwords stored securely in the database.
 
             </div>
 
@@ -303,3 +454,9 @@ button:hover{
 </body>
 
 </html>
+
+<?php
+
+mysqli_close($conn);
+
+?>

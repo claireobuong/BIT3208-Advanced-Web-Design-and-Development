@@ -4,30 +4,60 @@ $conn = mysqli_connect(
     "localhost",
     "root",
     "",
-    "week5db"
+    "week6db"
 );
+
+if(!$conn){
+
+    die("Connection failed: " . mysqli_connect_error());
+
+}
 
 $message = "";
 
 if(isset($_POST['submit'])){
 
-    $username = $_POST['username'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
-    $password = $_POST['password'];
+    if(empty($username) || empty($password)){
 
-    $insert = mysqli_query(
+        $message = "All fields are required.";
 
-        $conn,
+    }else{
 
-        "INSERT INTO users(username, password)
+        $hashedPassword = password_hash(
+            $password,
+            PASSWORD_DEFAULT
+        );
 
-        VALUES('$username', '$password')"
-    );
+        $stmt = mysqli_prepare(
+            $conn,
+            "INSERT INTO users(username, password)
+             VALUES(?, ?)"
+        );
 
-    if($insert){
+        mysqli_stmt_bind_param(
+            $stmt,
+            "ss",
+            $username,
+            $hashedPassword
+        );
 
-        $message = "User Added Successfully";
+        if(mysqli_stmt_execute($stmt)){
+
+            $message = "User added successfully.";
+
+        }else{
+
+            $message = "Failed to add user.";
+
+        }
+
+        mysqli_stmt_close($stmt);
+
     }
+
 }
 
 ?>
@@ -42,188 +72,58 @@ if(isset($_POST['submit'])){
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Add User</title>
+<title>CiviVote Kenya | Add User</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="css/style.css">
+
 <style>
 
-body{
-    margin:0;
-    padding:0;
-
-    font-family:'Poppins', sans-serif;
-
-    background:#eef1e8;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    min-height:100vh;
-}
-
 .container{
-    width:460px;
 
-    background:#b8d98a;
+    width:95%;
 
-    padding:45px;
+    max-width:1100px;
 
-    border-radius:40px;
+    padding:30px;
 
-    position:relative;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
 }
 
-.circle1{
-    position:absolute;
+.form-box{
 
-    width:170px;
-    height:170px;
+    width:420px;
 
-    background:rgba(255,255,255,0.12);
+    margin:30px auto 0 auto;
 
-    border-radius:50%;
-
-    top:-60px;
-    right:-60px;
 }
 
-.circle2{
-    position:absolute;
+.page-title{
 
-    width:120px;
-    height:120px;
-
-    background:rgba(255,255,255,0.10);
-
-    border-radius:50%;
-
-    bottom:-40px;
-    left:-40px;
-}
-
-.content{
-    position:relative;
-    z-index:2;
-}
-
-.icon-circle{
-    width:85px;
-    height:85px;
-
-    background:white;
-
-    border-radius:50%;
-
-    margin:auto;
-    margin-bottom:30px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:34px;
-}
-
-h1{
     text-align:center;
 
     color:#245000;
 
-    font-size:30px;
+    font-size:24px;
 
-    margin-bottom:8px;
-}
+    font-weight:600;
 
-.subtitle{
-    text-align:center;
+    margin-bottom:25px;
 
-    color:#4b5d36;
-
-    font-size:13px;
-
-    margin-bottom:35px;
-
-    line-height:1.6;
-}
-
-label{
-    display:block;
-
-    color:#466128;
-
-    font-size:12px;
-
-    margin-bottom:8px;
-    margin-top:18px;
-
-    font-weight:500;
-}
-
-input{
-    width:100%;
-
-    padding:15px;
-
-    border:none;
-
-    border-radius:40px;
-
-    background:white;
-
-    font-size:13px;
-
-    font-family:'Poppins', sans-serif;
-
-    outline:none;
-
-    box-sizing:border-box;
-}
-
-button{
-    width:100%;
-
-    padding:15px;
-
-    margin-top:30px;
-
-    border:none;
-
-    border-radius:40px;
-
-    background:#245000;
-
-    color:white;
-
-    font-size:14px;
-
-    font-weight:500;
-
-    cursor:pointer;
-
-    transition:0.3s;
-}
-
-button:hover{
-    background:#336600;
 }
 
 .message{
-    margin-top:18px;
+
+    margin-top:20px;
 
     text-align:center;
 
-    font-size:12px;
+    font-size:14px;
 
-    font-weight:500;
+    font-weight:600;
 
     color:#245000;
+
 }
 
 </style>
@@ -235,53 +135,70 @@ button:hover{
 <div class="container">
 
     <div class="circle1"></div>
+
     <div class="circle2"></div>
+
+    <?php include("navbar.php"); ?>
 
     <div class="content">
 
-        <div class="icon-circle">
-            👤
-        </div>
+        <div class="form-box">
 
-        <h1>
-            Add User
-        </h1>
+            <h2 class="page-title">
 
-        <div class="subtitle">
+                Add User
 
-            Create and save new users
-            into the system database.
+            </h2>
 
-        </div>
+            <form method="POST">
 
-        <form method="POST">
+                <label>
 
-            <label>Username</label>
+                    Username
 
-            <input
-                type="text"
-                name="username"
-                placeholder="Enter Username"
-                required
-            >
+                </label>
 
-            <label>Password</label>
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Enter Username"
+                    required
+                >
 
-            <input
-                type="password"
-                name="password"
-                placeholder="Enter Password"
-                required
-            >
+                <label>
 
-            <button type="submit" name="submit">
-                Save User
-            </button>
+                    Password
 
-        </form>
+                </label>
 
-        <div class="message">
-            <?php echo $message; ?>
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter Password"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    name="submit"
+                >
+
+                    Save User
+
+                </button>
+
+            </form>
+
+            <div class="message">
+
+                <?php
+
+                echo $message;
+
+                ?>
+
+            </div>
+
         </div>
 
     </div>
